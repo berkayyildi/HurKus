@@ -10,8 +10,8 @@ public class Ucak extends JLabel implements Ucaklar{
 	public static ArrayList<ImageIcon> icons_ucagim = new ArrayList<>();
 	
 	int direction;
-	int speed = 5;
-	int size = 180;
+	int speed = 1;
+	int size = 150;
 
 	public Ucak(){
 
@@ -25,7 +25,7 @@ public class Ucak extends JLabel implements Ucaklar{
 		
 		direction_set(-1);	//default 
 		
-		setBounds(400, 456, size, size);
+		setBounds(((MoveInAreaTest.ScreenSizeX-size)/2), MoveInAreaTest.ScreenSizeY, size, size);
 
 	}
 	
@@ -35,7 +35,6 @@ public class Ucak extends JLabel implements Ucaklar{
 			if (direction > 0 && sol_sag == 0) {
 				
 				direction--;
-				speed=6;
 				
 			}else if (direction < icons_ucagim.size()-1 && sol_sag == 1) {
 				
@@ -56,34 +55,47 @@ public class Ucak extends JLabel implements Ucaklar{
 }
 
 	
-	public void hareket(KeyEvent event) {
-		
-		System.out.println(getX()+","+getY()+"Dir:" + direction);	//KOORDINATLARI LOGLA
-		
-		String whichKey=KeyEvent.getKeyText(event.getKeyCode());
-		
-		if(whichKey.compareTo("Left")==0){
+	public void hareket() {
+
+		if(CreateGameArea.keys[KeyEvent.VK_A] || CreateGameArea.keys[KeyEvent.VK_LEFT]){
 			if ( getX() > 0) {
 				direction_set(0);
-				setBounds( getX()-speed, getY(), size, size);
+				setLocation(getX()-speed, getY());
 			}
-		}else if(whichKey.compareTo("Right")==0){
-			if ( getX() < 820) {
+		}
+		else if(CreateGameArea.keys[KeyEvent.VK_D] || CreateGameArea.keys[KeyEvent.VK_RIGHT]){
+			if ( getX() < (MoveInAreaTest.ScreenSizeX-size)) {
 				direction_set(1);
-				setBounds( getX()+speed, getY(), size, size);
+				setLocation(getX()+speed, getY());
 			}
-		}else if(whichKey.compareTo("Up")==0){
+		}
+		if(CreateGameArea.keys[KeyEvent.VK_W] || CreateGameArea.keys[KeyEvent.VK_UP]){
 			if ( getY() > 0) {
-				setBounds( getX(), getY()-speed, size, size);
+				setLocation(getX(), getY()-(speed/2));
 			}
-		}else if(whichKey.compareTo("Down")==0){
-			if ( getY() < 550) {
-				setBounds( getX(), getY()+speed, size, size);
+		}
+		else if(CreateGameArea.keys[KeyEvent.VK_S] || CreateGameArea.keys[KeyEvent.VK_DOWN]){
+			if ( getY() < (MoveInAreaTest.ScreenSizeY-size)) {
+				setLocation(getX(), getY()+(speed/2));
 			}
+		}
+		
+		if(CreateGameArea.keys[KeyEvent.VK_SPACE]){
+			
+			Mermi solmermi = new Mermi(32, 40);
+			Mermi sagmermi = new Mermi(102, 40);
+			add((JLabel)solmermi);
+			add((JLabel)sagmermi);
 		}
 		
 	}
 	
+	
+	public int ggY() {
+		
+		return getY();
+		
+	}
 	
 	
 }
