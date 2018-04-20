@@ -4,10 +4,12 @@ import java.awt.event.*;
   
 class Login extends JFrame implements ActionListener
  {
-  JButton SUBMIT;
-  JPanel panel;
-  JLabel label1,label2;
-  final JTextField  text1,text2;
+
+	private static final long serialVersionUID = 5936657649885406435L;
+	JButton SUBMIT;
+	JPanel panel;
+	JLabel label1,label2;
+	final JTextField  text1,text2;
    Login(){
 	   label1 = new JLabel();
 	   label1.setText("Username:");
@@ -29,16 +31,16 @@ class Login extends JFrame implements ActionListener
 	   SUBMIT.addActionListener(this);
 	   setTitle("LOGIN FORM");
    }
-  public void actionPerformed(ActionEvent ae){
-   String value1=text1.getText();
-   String value2=text2.getText();
-   if (value1.equals("b") && value2.equals("b")) {
-	   MoveInAreaTest.basla();
-   }
-   else{
-	   JOptionPane.showMessageDialog(this,"Incorrect login or password","Error",JOptionPane.ERROR_MESSAGE);
-   }
- }
+	  public void actionPerformed(ActionEvent ae){
+		   String value1=text1.getText();
+		   String value2=text2.getText();
+		   if (value1.equals("b") && value2.equals("b")) {
+			   MoveInAreaTest.basla();
+		   }
+		   else{
+			   JOptionPane.showMessageDialog(this,"Incorrect login or password","Error",JOptionPane.ERROR_MESSAGE);
+		   }
+	 }
  }
   class LoginDemo
  {

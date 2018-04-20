@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public class Ucak extends JLabel implements Ucaklar{
+public class Ucak extends JLabel{
+
+	private static final long serialVersionUID = -8672217871097649905L;
 
 	public static ArrayList<ImageIcon> icons_ucagim = new ArrayList<>();
 	
 	int direction;
-	int speed = 1;
+	int speed=2;
 	int size = 150;
 
 	public Ucak(){
@@ -48,11 +50,10 @@ public class Ucak extends JLabel implements Ucaklar{
 	}
 	
 	public void stabil() {
-	direction=2;
-	speed=5;
-	this.setIcon(icons_ucagim.get(icons_ucagim.size()/2));
+
+	this.setIcon(icons_ucagim.get(3));
 	
-}
+	}
 
 	
 	public void hareket() {
@@ -79,23 +80,19 @@ public class Ucak extends JLabel implements Ucaklar{
 				setLocation(getX(), getY()+(speed/2));
 			}
 		}
-		
-		if(CreateGameArea.keys[KeyEvent.VK_SPACE]){
+		else {
 			
-			Mermi solmermi = new Mermi(32, 40);
-			Mermi sagmermi = new Mermi(102, 40);
-			add((JLabel)solmermi);
-			add((JLabel)sagmermi);
+			
 		}
 		
 	}
 	
 	
-	public int ggY() {
-		
+	public int getPosY() {
 		return getY();
-		
 	}
-	
+	public int getPosX() {
+		return getX();
+	}
 	
 }

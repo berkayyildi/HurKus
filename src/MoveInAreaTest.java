@@ -9,15 +9,16 @@ public class MoveInAreaTest {
 	
 	public static void main(String[] args) {
 
-		
+		basla();
+		/*
 		Login myMoveInArea=new Login();
 		myMoveInArea.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myMoveInArea.setSize(400,200);
 		myMoveInArea.setVisible(true);
 		myMoveInArea.setLocationRelativeTo(null);	//CENTER
 		myMoveInArea.setResizable(false);
-		
-		basla();
+		*/
+
 
 	}
 	
