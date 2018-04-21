@@ -18,6 +18,8 @@ public class CreateGameArea extends JFrame implements KeyListener {
 	
 	
 	JLabel centerText = new JLabel();
+	JLabel backGround = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("grass.jpg")).getImage().getScaledInstance(1024, 768, Image.SCALE_DEFAULT)));
+	
 
 	public static boolean[] keys = new boolean[256];
 	
@@ -33,8 +35,13 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		addKeyListener(this);	//For KeyListener
 		setFocusable(true);		//For Keylistener Fix
 		setLayout(null);		//Absolute Layout
+		
 
-		add(myucak);
+		backGround.setBounds(0, 0, 1024, 768);
+		add(backGround);
+
+
+		backGround.add(myucak);
 		
 		//--------------------------------------
 		
@@ -44,10 +51,9 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		    public void run() {
 		    	CreateGameArea.keys[KeyEvent.VK_W] = true;    
                 
-                if(myucak.getPosY() < MoveInAreaTest.ScreenSizeY-150) {
+                if(myucak.getPosY() < MoveInAreaTest.ScreenSizeY - (Ucak.size)) {
                 	CreateGameArea.keys[KeyEvent.VK_W] = false;
                 	timeroyunbasi.cancel();
-                    return;
                 } 
 		    
 		    } 
@@ -62,7 +68,7 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		    	myucak.hareket();
 				repaint();		//EKRANDAKI RESMI SUREKLI YENILE
 		    } 
-		}, 0, 5);
+		}, 0, 25);
 		//--------------------------------------
 		
 		//--------------------------------------
@@ -76,7 +82,6 @@ public class CreateGameArea extends JFrame implements KeyListener {
 					mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()-4);
 					
 					if (mermimiz.getPosY() < 0) {
-
 						 Mermi.mermiler.remove(i);	//Arrayden sil hareket etmesin mem de yer kaplamasýn
 						 mermimiz.setVisible(false);//Görüntüden de sil (Memory de kalýyor ama !!!)
 					}
@@ -86,32 +91,26 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		}, 0, 10);
 		//--------------------------------------
 		
-
-
-		
+	
 		JLabel button = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("if_pause.png")).getImage().getScaledInstance(48, 48, Image.SCALE_DEFAULT)));
 		button.setBackground(Color.lightGray);
 		button.setBounds(954, 5, 90, 25);
-		add(button);
+		backGround.add(button);
 
 		
 		centerText.setText("<html><font color='red' size='10'>Press any key to start!</font></html>");
 		centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-200, MoveInAreaTest.ScreenSizeY/2, 500, 100);
-		add(centerText);
+		backGround.add(centerText);
 		
 		
 		for (int i=0; i<5; i++) {
 			JLabel label_heart = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("heart.png")).getImage().getScaledInstance(48, 48, Image.SCALE_DEFAULT)));
 			label_heart.setBounds((MoveInAreaTest.ScreenSizeX-(48*5)-20)+(i*50), MoveInAreaTest.ScreenSizeY-48, 48, 48);
-			add(label_heart);
+			backGround.add(label_heart);
 			
 		}
 
-		/*
-		JLabel grass_label = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("grass.jpg")).getImage().getScaledInstance(1024, 768, Image.SCALE_DEFAULT)));
-		grass_label.setBounds(0, 0, 1024, 768);
-		add(grass_label);
-		*/
+
 		
 
 		pack();
@@ -126,28 +125,24 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		
 	}	
 
-
 	@Override
 	public void keyReleased(KeyEvent e) {
 		
 		keys[e.getKeyCode()] = false;
-		
-		myucak.stabil();
-	}
 
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 		if (centerText.isVisible()) {centerText.setVisible(false);}	//Merkez yazý varsa yok et
 		
 		if(CreateGameArea.keys[KeyEvent.VK_SPACE]){
 		
 			Mermi solmermi = new Mermi(myucak.getPosX()+32, myucak.getPosY()+40);
 			Mermi sagmermi = new Mermi(myucak.getPosX()+102, myucak.getPosY()+40);
-			add(solmermi);
-			add(sagmermi);
+			backGround.add(solmermi);
+			backGround.add(sagmermi);
 			Mermi.mermiler.add(solmermi);
 			Mermi.mermiler.add(sagmermi);
 		}

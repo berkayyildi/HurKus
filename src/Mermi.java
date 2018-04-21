@@ -9,7 +9,7 @@ public class Mermi extends JLabel{
 
 	private static final long serialVersionUID = 8289232994291265989L;
 	
-	//Arraylist kullanýrsan java.util.ConcurrentModificationException hatasý alýyorum bunda da umarým kasma sýkýntýsý olmaz
+	//Arraylist kullanýrken java.util.ConcurrentModificationException hatasý aldým bu daha saðlýklý gibi.
 	
 	public static Vector<Mermi> mermiler = new Vector<>();
 
