@@ -3,6 +3,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Area;
+import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,8 +14,7 @@ public class CreateGameArea extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = -4098657826131334620L;
 
-	private Thread thread1;
-	
+
 	
 	JLabel centerText = new JLabel();
 	JLabel backGround = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("background.jpg")).getImage().getScaledInstance(1024, 768, Image.SCALE_DEFAULT)));
@@ -26,8 +26,6 @@ public class CreateGameArea extends JFrame implements KeyListener {
 	public CreateGameArea()	//Sýraya Gore Altta kalan altta oluyor!!
 	{
 		super("Hurkus");
-		
-		thread1 = new Thread(new MT(17));
 
 		
 		dispose(); setUndecorated(true);			//FULLSCREEN
@@ -36,6 +34,10 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		setFocusable(true);		//For Keylistener Fix
 		setLayout(null);		//Absolute Layout
 
+		
+		for (int i=1 ; i < 12 ; i++) {	//Patlama iconlarýný arraye at
+			DusmanUcagi.explosion_icons.add(new ImageIcon(new ImageIcon(getClass().getResource("explosion/boom" + new DecimalFormat("00").format(i) + ".png")).getImage().getScaledInstance(DusmanUcagi.size, DusmanUcagi.size, Image.SCALE_DEFAULT)));
+		}
 		
 
 		backGround.setBounds(0, 0, MoveInAreaTest.ScreenSizeX,  MoveInAreaTest.ScreenSizeY);
@@ -70,11 +72,12 @@ public class CreateGameArea extends JFrame implements KeyListener {
 
 	public void keyPressed(KeyEvent e) {
 		
-		if (centerText.isVisible()) {
+		if (centerText.isVisible() && (e.getKeyCode() == KeyEvent.VK_ENTER) ) {
 			centerText.setVisible(false);
-			thread1.start(); 
+		
+			MoveInAreaTest.thread1.start();
+			MoveInAreaTest.thread2.start();
 
-			
 			}	//Merkez yazý varsa (oyun baþlamadýysa) yazýyý yok et ve oyunu baþlat
 		
 		keys[e.getKeyCode()] = true;
@@ -95,7 +98,7 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		
 			new Mermi(myucak.getPosX()+32, myucak.getPosY()+40);
 			new Mermi(myucak.getPosX()+102, myucak.getPosY()+40);
-			Sound.playSound("fire.wav");
+			Sound.playSound("fire");
 
 			
 		}

@@ -9,8 +9,9 @@ public class MoveInAreaTest {
 	public static int ScreenSizeY = 768;
 	public static String current_username;
 	
-	static Thread thread2;
-	
+
+	static Thread thread1, thread2;
+
 	static CreateGameArea myMoveInArea;
 	
 	public static void main(String[] args) {
@@ -38,8 +39,9 @@ public class MoveInAreaTest {
 		myMoveInArea.setLocationRelativeTo(null);	//CENTER
 		myMoveInArea.setResizable(false);
 
-		thread2 = new Thread(new MT2(myMoveInArea,1,20));	//Multi Thread ý yarat Oyun Alanýmýzý içine yolla onun üzerinde oynayacaðýz
-		thread2.start();
+		thread1 = new Thread(new MT(17));
+		thread2 = new Thread(new Patlatici(60));
+		
 		
 	}
 	

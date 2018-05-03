@@ -1,11 +1,16 @@
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class MT implements Runnable {
 	
 	private final int sleepTime;
 	private boolean isFirstTime = true;
+	private int delayer = 0;
+	private int currentLevel = 1;
 
 	public MT(int sleepTime) {
+
+		bolumBaslat(currentLevel);
 		
 		this.sleepTime = sleepTime;
 		
@@ -15,7 +20,16 @@ public class MT implements Runnable {
 	public void run() {
 		while(true) {
 			try {
+				
+				if (DusmanUcagi.dusmanSayisi() == 0) {
+					
+					currentLevel++;
+					bolumBaslat(currentLevel);
+				}
 
+				delayer++; if (delayer > 100) { DusmanUcagi.araMesafe = new Random().nextInt(80) + 1;  delayer=0; } 		//Dusmanlar arasýdnaki mesafeyi random 0-80 arasý deðiþtir	
+				
+				
 				//-------------------- Uçaðýn Ýlk Açýlýþta Ekrana Gelmesi ------------------------
 				if (isFirstTime) {
 					
@@ -36,19 +50,17 @@ public class MT implements Runnable {
 					mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()-5);
 					
 					if (mermimiz.getPosY() < 0) {
-						 Mermi.mermilerArray.remove(i);	//Arrayden sil hareket etmesin mem de yer kaplamasýn
-						 mermimiz.setVisible(false);//Görüntüden de sil (Memory de kalýyor ama !!!)
+						 Mermi.mermilerArray.remove(i);
+						 MoveInAreaTest.sil(mermimiz);	//RAMden de sil
 					}
 					
 					// ----------- Mermi Dusmana Carptýmý bakmak için  -----------
 					for (int j=0; j<DusmanUcagi.dusmanSayisi() ;j++) {
-						boolean mermiyle_dusman = CreateGameArea.intersects(mermimiz, DusmanUcagi.dusmanucaklari.get(j));
-						if (mermiyle_dusman) {	//Çarpýþtýlarsa
-							DusmanUcagi.dusmanucaklari.get(j).patlat();
-							if (DusmanUcagi.dusmanucaklari.get(j).icon == 11) {
-
-								MoveInAreaTest.sil(DusmanUcagi.dusmanucaklari.remove(j));
-							}
+						DusmanUcagi dusmanimiz = DusmanUcagi.dusmanucaklari.get(j);
+						boolean mermiyle_dusman = CreateGameArea.intersects(mermimiz, dusmanimiz);
+						if (mermiyle_dusman && (!(dusmanimiz.patlayacak)) ) {	//Çarpýþýyolarsa ve daha oncden çarpýþtýklarý tespit edilmediyse
+							dusmanimiz.patlayacak = true;
+							Sound.playSound("explosion");
 						}
 					}
 					//--------------------------------------------------------------
@@ -56,7 +68,9 @@ public class MT implements Runnable {
 				}
 				//---------------------------------------------------------------------------------
 				
-				CreateGameArea.myucak.hareket();														//TUÞLARI ALGILATMAK ÝÇÝN
+				CreateGameArea.myucak.hareket();														//TUÞLARI ALGILATMAK ÝÇÝN			
+
+				DusmanUcagi.hareket();																	//YAPAY ZEKA ICIN
 
 				Thread.sleep(sleepTime);																//10 ms uyu
 				
@@ -67,4 +81,11 @@ public class MT implements Runnable {
 			
 		}
 	}
+	
+	public void bolumBaslat(int lvl) {
+		for (int i=0; i < (2*lvl)+1 ; i++) {
+			new DusmanUcagi();
+		}
+	}
+	
 }

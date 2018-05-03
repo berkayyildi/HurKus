@@ -1,5 +1,4 @@
 import java.awt.Image;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -13,7 +12,7 @@ public class DusmanUcagi extends JLabel{
 
 	private static final long serialVersionUID = 2892594439551034573L;
 	
-	int dusmanId;
+
 	int direction;
 	static int speed = 2;
 	public static int size = 120;
@@ -21,16 +20,12 @@ public class DusmanUcagi extends JLabel{
 	
 	public int yavasHareket = 0;
 	public int icon = 0;
+	public boolean patlayacak = false;
 
 	
 	public DusmanUcagi(){
-		dusmanId = dusmanSayisi();
+
 		setIcon(new ImageIcon(new ImageIcon(getClass().getResource("jet/dusman.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		
-		for (int i=1 ; i < 12 ; i++) {	//Patlama iconlarýný arraye at								//BU HER UCAK ÝÇÝN YAPILIYO OPTIMIZE ET BUNU
-			DecimalFormat twodigits = new DecimalFormat("00");	//00 01 diye gitmesi için
-			explosion_icons.add(new ImageIcon(new ImageIcon(getClass().getResource("explosion/boom" + twodigits.format(i) + ".png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		}
 		
 		setBounds((dusmanSayisi()*120), 0, size, size);	//Düþman sayýsý kadar uçaðý ard arda diz
 		
@@ -88,9 +83,14 @@ public class DusmanUcagi extends JLabel{
 	}
 	
 	public void patlat() {
-			System.out.println("resim: " + icon);
+
 			setIcon(explosion_icons.get(icon));
 			icon++;
+			
+			if (icon > 10) {
+				dusmanucaklari.remove(this);
+				MoveInAreaTest.sil(this);
+			}
 		
 	}
 	
