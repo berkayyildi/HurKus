@@ -8,8 +8,6 @@ public class DusmanUcagi extends JLabel{
 	
 	public static ArrayList<DusmanUcagi> dusmanucaklari = new ArrayList<DusmanUcagi>();
 
-	public static ArrayList<ImageIcon> explosion_icons = new ArrayList<>();
-
 	private static final long serialVersionUID = 2892594439551034573L;
 	
 
@@ -19,7 +17,7 @@ public class DusmanUcagi extends JLabel{
 	public static int araMesafe = 40;
 	
 	public int yavasHareket = 0;
-	public int icon = 0;
+	public int patlamaIconIndex = 0;
 	public boolean patlayacak = false;
 
 	
@@ -84,15 +82,24 @@ public class DusmanUcagi extends JLabel{
 	
 	public void patlat() {
 
-			setIcon(explosion_icons.get(icon));
-			icon++;
+			setIcon(CreateGameArea.explosion_icons.get(patlamaIconIndex));
+			patlamaIconIndex++;
 			
-			if (icon > 10) {
+			if (patlamaIconIndex > 10) {		//Patlama efekti bitti
+				CreateGameArea.puanArttir();	//Puani patlama efkti bittiðinde 1 arttir
 				dusmanucaklari.remove(this);
 				MoveInAreaTest.sil(this);
 			}
 		
 	}
+	
+	public void atesle() {
+
+		new Mermi(getPosX()+22, getPosY()+70, false);
+		new Mermi(getPosX()+92, getPosY()+70, false);
+		Sound.playSound("fire");
+	
+}
 	
 	public static int dusmanSayisi() {
 		return dusmanucaklari.size();

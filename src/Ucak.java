@@ -14,23 +14,29 @@ public class Ucak extends JLabel{
 	int direction;
 	int speed = 6;
 	public static int size = 150;
+	public boolean patlayacak = false;
+	public int patlamaIconIndex = 0;
+	public boolean died = false;
+	public int kalanCan = 5;
 
 	public Ucak(){
 
-		icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter1.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter2.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter3.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter4.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-		icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter5.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
-	
+		for (int i=1 ; i<5 ; i++) {	//1 den 5 e 
+		
+			icons_ucagim.add(new ImageIcon(new ImageIcon(getClass().getResource("jet/fighter" + i + ".png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
+
+		}
+		
 		setBounds(((MoveInAreaTest.ScreenSizeX-size)/2), MoveInAreaTest.ScreenSizeY, size, size);
 
 	}
 	
 	 void direction_set(boolean sol_sag) {	//0, 1, 2, 3, 4 imageleri var (index 0 sol) (index 2 orta) (index 4 sað) eðik
-		
+
+			if (patlamaIconIndex > 0) { return; }	//Uçak Hareket Etsin Ama Patlama Animasyonu Yok Olmasýn Diye Patlama Animasyonu Çalýþýyorken Direction Deðiþtirme
+			
 			if (direction > 0 && sol_sag == false) {
-				
+		
 				direction--;
 				
 			}else if (direction < icons_ucagim.size()-1 && sol_sag == true) {
@@ -47,19 +53,20 @@ public class Ucak extends JLabel{
 	
 	public void hareket() {
 
+		
 		//-------------- SOL SAG STABIL --------------
 		if(CreateGameArea.keys[KeyEvent.VK_A] || CreateGameArea.keys[KeyEvent.VK_LEFT]){
 			if ( getX() > 0) {
-				direction_set(false);
+				direction_set(false);	//Sola dönüþ animasyonu
 				setLocation(getX()-speed, getY());
 			}
 		}
 		else if(CreateGameArea.keys[KeyEvent.VK_D] || CreateGameArea.keys[KeyEvent.VK_RIGHT]){
 			if ( getX() < (MoveInAreaTest.ScreenSizeX-size)) {
-				direction_set(true);
+				direction_set(true);	//Saða dönüþ animasyonu
 				setLocation(getX()+speed, getY());
 			}
-		}
+		}	
 		else {
 			//Duz hale getir
 			// -------------- Uçaðýn 2 kademede standart hale gelmesi için --------------
@@ -98,6 +105,47 @@ public class Ucak extends JLabel{
 		}
 		
 		
+	}
+	
+	public void atesle() {
+		new Mermi(getPosX()+32, getPosY()+40, true);
+		new Mermi(getPosX()+102, getPosY()+40, true);
+		Sound.playSound("fire");
+	}
+	
+
+	public void patlat() {
+
+		if (!died) {
+			setIcon(CreateGameArea.explosion_icons.get(patlamaIconIndex));
+			patlamaIconIndex++;
+		}
+
+		
+		if (patlamaIconIndex > 10) {
+			
+			patlamaIconIndex = 0;		//Patlama animasyonunu baþa al
+			patlayacak=false;
+
+		}
+		
+		if (kalanCan == 0) {
+			
+			//-----GAME OVER YAZISINI YAZ-----
+			JLabel centerText = new JLabel();
+			centerText.setText("<html><font color='red' size='10'>Game Over!</font></html>");
+			centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-200, MoveInAreaTest.ScreenSizeY/2, 600, 100);
+			MoveInAreaTest.ekle(centerText);
+			//--------------------------------
+			
+			MoveInAreaTest.sil(this);	//Uçaðýmý sil
+			MoveInAreaTest.thread1.stop();
+			MoveInAreaTest.thread2.stop();
+			died = true;
+
+			
+		}
+	
 	}
 	
 	
