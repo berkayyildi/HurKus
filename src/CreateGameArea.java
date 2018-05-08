@@ -21,8 +21,10 @@ public class CreateGameArea extends JFrame implements KeyListener {
 
 	JLabel centerText = new JLabel();
 	static JLabel topLeftText = new JLabel();
-	JLabel backGround = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("background.jpg")).getImage().getScaledInstance(1024, 768, Image.SCALE_DEFAULT)));
-
+	JLabel SaydamKatman = new JLabel();	//Boþ bir jframe
+	JLabel arkaplan = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("background_big.jpg")).getImage()));
+	JLabel arkaplan2 = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("background_big.jpg")).getImage()));
+	
 	public static boolean[] keys = new boolean[256];
 	
 	static Ucak myucak = new Ucak();
@@ -46,29 +48,34 @@ public class CreateGameArea extends JFrame implements KeyListener {
 		for (int i=0; i<5; i++) {
 			heartArray.add( new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("heart.png")).getImage().getScaledInstance(32, 32, Image.SCALE_DEFAULT))) );
 			heartArray.get(i).setBounds((MoveInAreaTest.ScreenSizeX-(32*5)-20)+(i*35), MoveInAreaTest.ScreenSizeY-32, 32, 32);
-			backGround.add(heartArray.get(i));
+			SaydamKatman.add(heartArray.get(i));
 		}
 		//-------------------------------
+
+		SaydamKatman.setBounds(0, 0, MoveInAreaTest.ScreenSizeX,  MoveInAreaTest.ScreenSizeY);
+		add(SaydamKatman);		//Saydam Katman Jlabelini Arkaplanýn üstüne eklþe
+
+		arkaplan.setBounds(0, 0, MoveInAreaTest.ScreenSizeX,  MoveInAreaTest.ScreenSizeY);
+		add(arkaplan);		//Arkaplaný en Alta Ekle
 		
+		arkaplan2.setBounds(0, - MoveInAreaTest.ScreenSizeY, MoveInAreaTest.ScreenSizeX,  MoveInAreaTest.ScreenSizeY);	//Bu arkaplan bi arkaplan boyutu üstte yaratýldý
+		add(arkaplan2);		//Arkaplaný en Alta Ekle
 
-		backGround.setBounds(0, 0, MoveInAreaTest.ScreenSizeX,  MoveInAreaTest.ScreenSizeY);
-		add(backGround);		//Arkaplaný Eke
-
-		backGround.add(myucak);	//Uçaðýmý Ekle
+		SaydamKatman.add(myucak);	//Uçaðýmý Ekle
 
 		JLabel button = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("if_pause.png")).getImage().getScaledInstance(48, 48, Image.SCALE_DEFAULT)));
 		button.setBackground(Color.lightGray);
 		button.setBounds(954, 5, 90, 25);
-		backGround.add(button);
+		SaydamKatman.add(button);
 
 		
 		centerText.setText("<html><font color='red' size='10'>Press Enter to start!</font></html>");
 		centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-200, (MoveInAreaTest.ScreenSizeY/2)-10 , 550, 100);
-		backGround.add(centerText);
+		SaydamKatman.add(centerText);
 		
 		topLeftText.setText("<html><font color='green' size='8'>0</font></html>");
 		topLeftText.setBounds(0, 0, 100, 100);
-		backGround.add(topLeftText);
+		SaydamKatman.add(topLeftText);
 
 		
 		setVisible(true); //Display the window.

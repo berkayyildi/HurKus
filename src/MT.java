@@ -34,6 +34,9 @@ public class MT implements Runnable {
 				mesafeAyarlayiciDelayer++; if (mesafeAyarlayiciDelayer > mesafeAyarlayiciDelay) { DusmanUcagi.araMesafe = new Random().nextInt(80) + 1;  mesafeAyarlayiciDelayer=0; } 		//Dusmanlar arasýdnaki mesafeyi random 0-80 arasý deðiþtir	
 				
 				
+				
+				MoveInAreaTest.arkaplaniKaydir();
+				
 				//-------------------- Uçaðýn Ýlk Açýlýþta Ekrana Yürümesi Ýçin ------------------------
 				if (isFirstTime) {
 					
@@ -108,6 +111,7 @@ public class MT implements Runnable {
 					DusmanUcagi atesEdecekDusman = DusmanUcagi.dusmanucaklari.get(randomDusman);
 					atesEdecekDusman.atesle();
 					DusmanAtesiDelayer = 0;
+					
 				}
 				//---------------------------------------------------------------------------------
 				

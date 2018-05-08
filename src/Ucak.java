@@ -131,18 +131,10 @@ public class Ucak extends JLabel{
 		
 		if (kalanCan == 0) {
 			
-			//-----GAME OVER YAZISINI YAZ-----
-			JLabel centerText = new JLabel();
-			centerText.setText("<html><font color='red' size='10'>Game Over!</font></html>");
-			centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-200, MoveInAreaTest.ScreenSizeY/2, 600, 100);
-			MoveInAreaTest.ekle(centerText);
-			//--------------------------------
-			
 			MoveInAreaTest.sil(this);	//Uçaðýmý sil
-			MoveInAreaTest.thread1.stop();
-			MoveInAreaTest.thread2.stop();
 			died = true;
-
+			
+			MoveInAreaTest.oyunuBitir();
 			
 		}
 	

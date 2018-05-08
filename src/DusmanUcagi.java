@@ -1,5 +1,6 @@
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -23,7 +24,9 @@ public class DusmanUcagi extends JLabel{
 	
 	public DusmanUcagi(){
 
-		setIcon(new ImageIcon(new ImageIcon(getClass().getResource("jet/dusman.png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
+		int  random_id = new Random().nextInt(8) + 1; //min 1 max 8 random sayý oluþtur
+		
+		setIcon(new ImageIcon(new ImageIcon(getClass().getResource("enemy/fighter" + random_id +".png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
 		
 		setBounds((dusmanSayisi()*120), 0, size, size);	//Düþman sayýsý kadar uçaðý ard arda diz
 		
