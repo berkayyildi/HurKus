@@ -11,16 +11,20 @@ public class Mermi extends JLabel{
 	public static ArrayList<Mermi> DusmanMermiArray	= new ArrayList<>();
 
 	public Mermi(int StartX , int StartY, boolean updown) {
-				
-		this.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("heart.png")).getImage().getScaledInstance(12, 12, Image.SCALE_DEFAULT)));
-		
-		setBounds(StartX, StartY, 12, 12);
-		
+
 		if (updown) {	//Mermiyi arraye ekle
+			
+			this.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("bullet_blue.png")).getImage().getScaledInstance(20, 35, Image.SCALE_DEFAULT)));
 			MermilerimArray.add(this);	//TRUE ise benim mermilere ekle
+			
 		}else {
+			
+			this.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("bullet_red.png")).getImage().getScaledInstance(20, 35, Image.SCALE_DEFAULT)));
 			DusmanMermiArray.add(this);	//FALSE ise düþman mermilerine ekle
+			
 		}	
+		
+		setBounds(StartX, StartY, 20, 35);
 		
 		MoveInAreaTest.ekle(this);	//Mermiyi Görüntüye ekle
 

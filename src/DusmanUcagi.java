@@ -28,7 +28,9 @@ public class DusmanUcagi extends JLabel{
 		
 		setIcon(new ImageIcon(new ImageIcon(getClass().getResource("enemy/fighter" + random_id +".png")).getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT)));
 		
-		setBounds((dusmanSayisi()*120), 0, size, size);	//Düþman sayýsý kadar uçaðý ard arda diz
+		int soldanBosluk = (MoveInAreaTest.ScreenSizeX - (2 + MT.currentLevel) * size) / 2;	//(Ekran boyutu - Bu levelde gelecek dusman sayisi) /2
+		
+		setBounds(soldanBosluk + (dusmanucaklari.size()*size), -size, size, size);	//Düþman sayýsý kadar uçaðý ard arda diz
 		
 		dusmanucaklari.add(this);	//Yeni yaratýlan düþman objesini dusman ucaklarý arasýna ekle
 		
@@ -49,7 +51,7 @@ public class DusmanUcagi extends JLabel{
 
 			dusmanimiz = dusmanucaklari.get(i);
 			if (i > 0) {OncekiDusmanimiz = dusmanucaklari.get(i-1); } else { OncekiDusmanimiz = null;}
-			if (i < dusmanSayisi()-1) { SonrakiDusmanimiz = dusmanucaklari.get(i+1); } else { SonrakiDusmanimiz = null;}
+			if (i < dusmanucaklari.size()-1) { SonrakiDusmanimiz = dusmanucaklari.get(i+1); } else { SonrakiDusmanimiz = null;}
 
 			dusmanimiz.yavasHareket++;
 			if (dusmanimiz.yavasHareket > 6 ) { dusmanimiz.setLocation(dusmanimiz.getPosX(), dusmanimiz.getPosY()+1);	dusmanimiz.yavasHareket=0;}
@@ -101,13 +103,8 @@ public class DusmanUcagi extends JLabel{
 		new Mermi(getPosX()+22, getPosY()+70, false);
 		new Mermi(getPosX()+92, getPosY()+70, false);
 		Sound.playSound("fire");
-	
-}
-	
-	public static int dusmanSayisi() {
-		return dusmanucaklari.size();
 	}
-	
+
 	public int getPosY() {
 		return getY();
 	}

@@ -1,6 +1,8 @@
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +27,7 @@ public class Login extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = -3724396567092901733L;
 	
+	public static boolean fullscreen = false;
 	String topScoresHtml = "";
 	JLabel backGround = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("background_big.jpg")).getImage().getScaledInstance(1024, 768, Image.SCALE_DEFAULT)));
 	JTextField textField=new JTextField();
@@ -34,6 +38,7 @@ public class Login extends JFrame implements ActionListener{
 	JLabel passText = new JLabel("<html><font color='white' size='5'>Password:</font></html>", JLabel.LEFT);
 	JButton btn1 = new JButton("Login");
 	JButton newuser = new JButton("New user? Click here and register");
+	JCheckBox checkBox1 = new JCheckBox("Full Screen");  
 
 	public Login()	//Sýraya Gore Altta kalan altta oluyor!!
 	{
@@ -76,6 +81,9 @@ public class Login extends JFrame implements ActionListener{
 		passField.setBounds	(360, 460, 280, 50);
 		btn1.setBounds		(360, 540, 280, 50);
 		newuser.setBounds	(360, 600, 280, 30);
+		checkBox1.setBounds	(360, 650, 100, 30);
+		
+		
 		scoreboardTemplete.setBounds(700, 100, 400, 500);
         
 		backGround.add(loginText);
@@ -86,7 +94,19 @@ public class Login extends JFrame implements ActionListener{
         backGround.add(passField);
         backGround.add(btn1);
         backGround.add(newuser);
+        backGround.add(checkBox1);
         backGround.add(scoreboardTemplete);
+        
+        checkBox1.addItemListener(new ItemListener() {
+		    @Override
+		    public void itemStateChanged(ItemEvent e) {
+		        if(e.getStateChange() == ItemEvent.SELECTED) {	//checkbox selected
+		        	fullscreen = true;
+		        } else {										//checkbox deselected
+		        	fullscreen = false;
+		        };
+		    }
+		});
         
         regisText.setVisible(false);	//Register Yazýsý Gizli
         

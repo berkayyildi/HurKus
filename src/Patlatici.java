@@ -15,7 +15,7 @@ public class Patlatici implements Runnable{
 		while(true) {
 			try {
 				//Dusmanlarý patlat
-				for (int j=0; j<DusmanUcagi.dusmanSayisi() ;j++) {
+				for (int j=0; j<DusmanUcagi.dusmanucaklari.size() ;j++) {
 					
 					DusmanUcagi dusmanimiz = DusmanUcagi.dusmanucaklari.get(j);
 					if (dusmanimiz.patlayacak) {

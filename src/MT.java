@@ -3,14 +3,21 @@ import java.util.Random;
 
 public class MT implements Runnable {
 	
-	private final int sleepTime;
-	private boolean isFirstTime = true;
-	private int mesafeAyarlayiciDelay = 100;
-	private int mesafeAyarlayiciDelayer = 0;
+	public static volatile boolean allowToRun = true;
+	
+	private final int sleepTime;				//Thread Sleep Time
+	private boolean isFirstTime = true;			//Ilk acilis mi
+	private int mesafeAyarlayiciDelay = 100;	//Dusman ucaklari arasindaki mesafeyi degistirme süresi
+	private int mesafeAyarlayiciDelayer = 0;	//Dusman ucaklari arasindaki mesafeyi degistirme sayaci
 	
 	private int DusmanAtesiDelay = 50;	//Ateþ için ne kadar saymasý gerektiði
 	private int DusmanAtesiDelayer = 0;	//Basit bi counter DusmanAtesiDelay e kadar sayýnca ates eder.
-	private int currentLevel = 1;
+	public static int currentLevel = 1;		//Þu anki leveli tutar
+
+	
+	private int mermiSpamDelay = 150;	//Mermi spam sýfýrlama süresi
+	private int mermiSpamDelayer = 0;	//Spam süre sayaci
+
 
 	public MT(int sleepTime) {
 
@@ -20,119 +27,153 @@ public class MT implements Runnable {
 		
 	}
 	
-	@Override
-	public void run() {
-		while(true) {
-			try {
-				
-				if (DusmanUcagi.dusmanSayisi() == 0) {
-					
-					currentLevel++;
-					bolumBaslat(currentLevel);
-				}
-
-				mesafeAyarlayiciDelayer++; if (mesafeAyarlayiciDelayer > mesafeAyarlayiciDelay) { DusmanUcagi.araMesafe = new Random().nextInt(80) + 1;  mesafeAyarlayiciDelayer=0; } 		//Dusmanlar arasýdnaki mesafeyi random 0-80 arasý deðiþtir	
-				
-				
-				
-				MoveInAreaTest.arkaplaniKaydir();
-				
-				//-------------------- Uçaðýn Ýlk Açýlýþta Ekrana Yürümesi Ýçin ------------------------
-				if (isFirstTime) {
-					
-					CreateGameArea.keys[KeyEvent.VK_W] = true; 
-									 
-	                if(CreateGameArea.myucak.getPosY() < MoveInAreaTest.ScreenSizeY - (Ucak.size)) {	//Uçak ekrana geldi ise
-	                	CreateGameArea.keys[KeyEvent.VK_W] = false;										//Üst tuþu artýk basma
-	                	isFirstTime = false;															//First time den çýk
-	                } 
-					
-				}
-				//--------------------------------------------------------------------------------
-				
-				//---------------------- Benim Merminin Hareketi Ýçin ----------------------------------
-				for (int i = 0; i<Mermi.MermilerimArray.size() ;i++) {
-					
-					Mermi mermimiz = Mermi.MermilerimArray.get(i);
-					mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()-5);
-					
-					if (mermimiz.getPosY() < 0) {
-						 Mermi.MermilerimArray.remove(i);
-						 MoveInAreaTest.sil(mermimiz);	//RAMden de sil
-					}
-					
-					// ----------- Mermi Dusmana Carptýmý bakmak için  -----------
-					for (int j=0; j<DusmanUcagi.dusmanSayisi() ;j++) {
-						DusmanUcagi dusmanimiz = DusmanUcagi.dusmanucaklari.get(j);
-						boolean mermiyle_dusman = CreateGameArea.intersects(mermimiz, dusmanimiz);
-						if (mermiyle_dusman && (!(dusmanimiz.patlayacak)) ) {	//Çarpýþýyolarsa ve daha oncden çarpýþtýklarý tespit edilmediyse
-							dusmanimiz.patlayacak = true;	//Patlayacak olarak iþaretle
-							MoveInAreaTest.sil(mermimiz);	//Mermimizi yok et arkadan geleni vurmasýn
-							Sound.playSound("explosion");	//Patlama sesi çal
-						}
-					}
-					//--------------------------------------------------------------
-					
-				}
-				//---------------------------------------------------------------------------------
-				
-				//---------------------- Dusman Mermisinin Hareketi Ýçin ----------------------------------
-				for (int i = 0; i<Mermi.DusmanMermiArray.size() ;i++) {
-					Mermi mermimiz = Mermi.DusmanMermiArray.get(i);
-					mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()+5);
-					
-					if (mermimiz.getPosY() > MoveInAreaTest.ScreenSizeY) {
-						 Mermi.DusmanMermiArray.remove(i);
-						 MoveInAreaTest.sil(mermimiz);	//RAMden de sil
-					}
-					
-					// ----------- Mermi Bana Carptýmý bakmak için  -----------
-						Ucak ben = CreateGameArea.myucak;
-						boolean mermiyle_ben = CreateGameArea.intersects(mermimiz, ben);
-						
-						if (mermiyle_ben) {
-							MoveInAreaTest.sil(mermimiz);	//Mermimizi yok et arkadan geleni vurmasýn
-						}
-						
-						if (mermiyle_ben && (!(ben.patlayacak)) ) {	//Çarpýþýyolarsa ve daha onceden çarpýþtýklarý tespit edilmediyse
-							ben.patlayacak = true;			//Patlayacak olarak iþaretle
-							CreateGameArea.vuruldu();		//Vurulma yada patlama efektini çalýþtýrýr
-							Sound.playSound("explosion");	//Patlama sesi çal
-					}
-					//--------------------------------------------------------------
-					
-				}
-				//---------------------------------------------------------------------------------
-				
-				//---------------------- Dusmana Ateþ Ettir ----------------------------------
-				DusmanAtesiDelayer++;
-				if (DusmanAtesiDelayer > DusmanAtesiDelay) {
-					int randomDusman = new Random().nextInt(DusmanUcagi.dusmanSayisi());
-					DusmanUcagi atesEdecekDusman = DusmanUcagi.dusmanucaklari.get(randomDusman);
-					atesEdecekDusman.atesle();
-					DusmanAtesiDelayer = 0;
-					
-				}
-				//---------------------------------------------------------------------------------
-				
-				CreateGameArea.myucak.hareket();														//TUÞLARI ALGILATMAK ÝÇÝN			
-
-				DusmanUcagi.hareket();																	//YAPAY ZEKA ÝLE DUSMAN HAREKETI ICIN
-
-				Thread.sleep(sleepTime);																//10 ms uyu
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	
+	public void bolumBaslat(int lvl) {	//Yeni Bölüm Ýçin uçaklarý yaratýr
+		
+		CreateGameArea.topRightText.setText("<html><font color='green' size='6'>Level " + lvl +"</font></html>");	//Sað üstte yazan bölüm yazýsýný güncelle
+		
+		if (lvl >= 5) { lvl =5; }	//level 5 ten büyük olsa da sadece 5 lvl de olan uçak kadar uçak yarat
 			
+			for (int i=0; i < 2+lvl ; i++) {
+				new DusmanUcagi();	//Düþma yarat
+			}	
+		if (lvl < 10) {
+			DusmanAtesiDelay = DusmanAtesiDelay - 5;	//Mermi hizlarini arttir
 		}
 	}
 	
-	public void bolumBaslat(int lvl) {
-		for (int i=0; i < (2*lvl)+1 ; i++) {
-			new DusmanUcagi();
+	
+	@Override
+	public void run() {
+
+		while(true) {
+			if (allowToRun) {
+				try {
+					
+					if (DusmanUcagi.dusmanucaklari.size() == 0) {
+						currentLevel++;
+						bolumBaslat(currentLevel);
+					}
+					
+					
+	
+					mesafeAyarlayiciDelayer++; if (mesafeAyarlayiciDelayer > mesafeAyarlayiciDelay) { DusmanUcagi.araMesafe = new Random().nextInt(80) + 1;  mesafeAyarlayiciDelayer=0; } 		//Dusmanlar arasýdnaki mesafeyi random 0-80 arasý deðiþtir	
+					
+					
+					
+					MoveInAreaTest.arkaplaniKaydir();
+					
+					//-------------------- Uçaðýn Ýlk Açýlýþta Ekrana Yürümesi Ýçin ------------------------
+					if (isFirstTime) {	//bu 0 ise performans icin bidaha iceri bakmaz
+						
+						CreateGameArea.keys[KeyEvent.VK_W] = true; 
+										 
+		                if(CreateGameArea.myucak.getPosY() < MoveInAreaTest.ScreenSizeY - (Ucak.size)) {	//Uçak ekrana geldi ise
+		                	CreateGameArea.keys[KeyEvent.VK_W] = false;										//Üst tuþu artýk basma
+		                	isFirstTime = false;															//First time den çýk
+		                } 
+						
+					}
+					//--------------------------------------------------------------------------------
+					
+					//-------------------- Dusman Ucaklarinin Ekrana Yürümesi Ýçin ------------------------
+
+					for (int j=0; j<DusmanUcagi.dusmanucaklari.size() ;j++) {
+						DusmanUcagi dusmanimiz = DusmanUcagi.dusmanucaklari.get(j);
+						if (dusmanimiz.getY() < 0) {dusmanimiz.setLocation(dusmanimiz.getX(),dusmanimiz.getY()+1);}
+							
+					}
+
+					//--------------------------------------------------------------------------------
+					
+					//---------------------- Benim Merminin Hareketi Ýçin ----------------------------------
+					for (int i = 0; i<Mermi.MermilerimArray.size() ;i++) {
+						
+						Mermi mermimiz = Mermi.MermilerimArray.get(i);
+						mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()-5);
+						
+						if (mermimiz.getPosY() < 0) {
+							 Mermi.MermilerimArray.remove(i);
+							 MoveInAreaTest.sil(mermimiz);	//RAMden de sil
+						}
+						
+						// ----------- Mermi Dusmana Carptýmý bakmak için  -----------
+						for (int j=0; j<DusmanUcagi.dusmanucaklari.size() ;j++) {
+							DusmanUcagi dusmanimiz = DusmanUcagi.dusmanucaklari.get(j);
+							boolean mermiyle_dusman = CreateGameArea.intersects(mermimiz, dusmanimiz);
+							if (mermiyle_dusman && (!(dusmanimiz.patlayacak)) ) {	//Çarpýþýyolarsa ve daha oncden çarpýþtýklarý tespit edilmediyse
+								dusmanimiz.patlayacak = true;	//Patlayacak olarak iþaretle
+								MoveInAreaTest.sil(mermimiz);	//Mermimizi yok et arkadan geleni vurmasýn
+								Sound.playSound("explosion");	//Patlama sesi çal
+							}
+						}
+						//--------------------------------------------------------------
+						
+					}
+					//---------------------------------------------------------------------------------
+					
+					//---------------------- Dusman Mermisinin Hareketi Ýçin ----------------------------------
+					for (int i = 0; i<Mermi.DusmanMermiArray.size() ;i++) {
+						Mermi mermimiz = Mermi.DusmanMermiArray.get(i);
+						mermimiz.setLocation(mermimiz.getPosX(),mermimiz.getPosY()+5);
+						
+						if (mermimiz.getPosY() > MoveInAreaTest.ScreenSizeY) {
+							 Mermi.DusmanMermiArray.remove(i);
+							 MoveInAreaTest.sil(mermimiz);	//RAMden de sil
+						}
+						
+						// ----------- Mermi Bana Carptýmý bakmak için  -----------
+							Ucak ben = CreateGameArea.myucak;
+							boolean mermiyle_ben = CreateGameArea.intersects(mermimiz, ben);
+							
+							if (mermiyle_ben) {
+								MoveInAreaTest.sil(mermimiz);	//Mermimizi yok et arkadan geleni vurmasýn
+							}
+							
+							if (mermiyle_ben && (!(ben.patlayacak)) ) {	//Çarpýþýyolarsa ve daha onceden çarpýþtýklarý tespit edilmediyse
+								ben.patlayacak = true;			//Patlayacak olarak iþaretle
+								CreateGameArea.vuruldu();		//Vurulma yada patlama efektini çalýþtýrýr
+								Sound.playSound("explosion");	//Patlama sesi çal
+						}
+						//--------------------------------------------------------------
+						
+					}
+					//---------------------------------------------------------------------------------
+					
+					//---------------------- Dusmana Ateþ Ettir ----------------------------------
+					++DusmanAtesiDelayer;
+					if (DusmanAtesiDelayer > DusmanAtesiDelay) {
+						int randomDusman = new Random().nextInt(DusmanUcagi.dusmanucaklari.size());
+						DusmanUcagi atesEdecekDusman = DusmanUcagi.dusmanucaklari.get(randomDusman);
+						atesEdecekDusman.atesle();
+						DusmanAtesiDelayer = 0;
+						
+					}
+					//---------------------------------------------------------------------------------
+					
+					//---------------------- Mermi Spam Kontrol ----------------------------------
+					++mermiSpamDelayer;
+					if (mermiSpamDelayer > mermiSpamDelay) {
+						Ucak.mermiSpamCount = 0;
+						mermiSpamDelayer = 0;
+						CreateGameArea.bottomLeftText.setVisible(false);
+					}
+					//---------------------------------------------------------------------------------
+					
+					CreateGameArea.myucak.hareket();														//TUÞLARI ALGILATMAK ÝÇÝN			
+	
+					DusmanUcagi.hareket();																	//YAPAY ZEKA ÝLE DUSMAN HAREKETI ICIN
+	
+					Thread.sleep(sleepTime);																//10 ms uyu
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}	//Allow To Run
 		}
 	}
+
 	
 }

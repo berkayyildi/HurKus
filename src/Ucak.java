@@ -15,9 +15,12 @@ public class Ucak extends JLabel{
 	int speed = 6;
 	public static int size = 150;
 	public boolean patlayacak = false;
-	public int patlamaIconIndex = 0;
+	private int patlamaIconIndex = 0;
 	public boolean died = false;
 	public int kalanCan = 5;
+	
+	public int mermiSpamMax = 6;
+	public static int mermiSpamCount = 0;
 
 	public Ucak(){
 
@@ -101,16 +104,26 @@ public class Ucak extends JLabel{
 		else if(CreateGameArea.keys[KeyEvent.VK_S] || CreateGameArea.keys[KeyEvent.VK_DOWN]){
 			if ( getY() < (MoveInAreaTest.ScreenSizeY-size)) {
 				setLocation(getX(), getY()+(speed/2));
+				MoveInAreaTest.arkaplanHizi = 2;	//Geriye basildiginda arkaplan yavaslasin
 			}
+		}
+		
+		else {
+			MoveInAreaTest.arkaplanHizi = 3;		//Geri basilmiyorsa arkaplan hizini normale al
 		}
 		
 		
 	}
 	
 	public void atesle() {
-		new Mermi(getPosX()+32, getPosY()+40, true);
-		new Mermi(getPosX()+102, getPosY()+40, true);
-		Sound.playSound("fire");
+		if (mermiSpamCount < mermiSpamMax) {
+			new Mermi(getPosX()+32, getPosY()+40, true);
+			new Mermi(getPosX()+102, getPosY()+40, true);
+			Sound.playSound("fire");
+			++mermiSpamCount;	//Mermi spam sayisini arttir
+		}else {
+			CreateGameArea.bottomLeftText.setVisible(true);
+		}
 	}
 	
 

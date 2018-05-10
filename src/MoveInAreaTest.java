@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +10,9 @@ import javax.swing.JLabel;
 
 public class MoveInAreaTest {
 
+	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	static int user_screen_width	= (int)screenSize.getWidth();
+	static int user_screen_height	= (int)screenSize.getHeight();
 	
 	public static int ScreenSizeX = 1024;
 	public static int ScreenSizeY = 768;
@@ -29,11 +34,16 @@ public class MoveInAreaTest {
 		myMoveLogInArea.setVisible(true);
 		myMoveLogInArea.setLocationRelativeTo(null);	//CENTER
 		myMoveLogInArea.setResizable(false);
-		
+
 	}
 	
 	
 	public static void oyunuBaslat(String username) {
+		
+		if(Login.fullscreen) {
+			ScreenSizeX = user_screen_width;
+			ScreenSizeY = user_screen_height;
+		}
 		
 		current_username = username;
 		
@@ -53,20 +63,20 @@ public class MoveInAreaTest {
 	
 	public static void ekle(JLabel eklenecek) {
 		
-		myMoveInArea.SaydamKatman.add(eklenecek);
+		CreateGameArea.SaydamKatman.add(eklenecek);
 		myMoveInArea.repaint();
 	}
 	
 	public static void sil(JLabel silinecek) {
 		
-		myMoveInArea.SaydamKatman.remove(silinecek);
+		CreateGameArea.SaydamKatman.remove(silinecek);
 		myMoveInArea.repaint();
 	}
 	
 	public static void arkaplaniKaydir() {
 		
-		JLabel arkaplan = myMoveInArea.arkaplan;
-		JLabel arkaplan2 = myMoveInArea.arkaplan2;
+		JLabel arkaplan = CreateGameArea.arkaplan;
+		JLabel arkaplan2 = CreateGameArea.arkaplan2;
 
 		arkaplan.setLocation(arkaplan.getX(),arkaplan.getY() + arkaplanHizi);		//Arkaplan 1 i aþaðý kaydýr
 		arkaplan2.setLocation(arkaplan2.getX(),arkaplan2.getY() + arkaplanHizi);	//Arkaplan 2 yi aþaðý kaydýr
@@ -84,7 +94,7 @@ public class MoveInAreaTest {
 		//-----GAME OVER YAZISINI YAZ-----
 		JLabel centerText = new JLabel();
 		centerText.setText("<html><font color='red' size='10'>Game Over!</font></html>");
-		centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-200, MoveInAreaTest.ScreenSizeY/2, 600, 100);
+		centerText.setBounds(MoveInAreaTest.ScreenSizeX/2-100, MoveInAreaTest.ScreenSizeY/2-50, 250, 100);
 		ekle(centerText);
 		//--------------------------------
 		
